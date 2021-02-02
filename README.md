@@ -6,7 +6,7 @@ ________________________________________________________________________________
 ## Dependencies
 Requires following packages:  
 * python: 3.6.9  
-* cv2: 4.1.2  
+* OpenCV: 4.1.2  
 * tensorflow: 2.4.1  
 * tqdm: 4.41.1  
 * numpy: 1.19.5  
