@@ -21,7 +21,7 @@ train_folders = ['/content/drive/MyDrive/Colaboratory/跨平台超分辨率/SR_t
                  '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/SR_train&test/SR_training_datasets/General100',
                  '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/SR_train&test/SR_training_datasets/T91']
 val_folders = ['/content/drive/MyDrive/Colaboratory/跨平台超分辨率/SR_train&test/SR_testing_datasets/Set5']
-model_save_path = '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/models/RDN.h5'
+model_save_path = '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/models/RDN.hdf5'
 Imglist = ['RGB', 'GRAY', 'YCrCb']
 print('Have got parameters, for ' + Imglist[Imgflag] + ' images.')
 
@@ -38,19 +38,16 @@ if Imgflag != 0:  # Have to add another dimension for channel if images only hav
     y_val = np.reshape(y_val, (y_val.shape[0], y_val.shape[1], y_val.shape[2], 1))
 y_train, x_train = y_train / 255.0, x_train / 255.0  # Standardization
 y_val, x_val = y_val / 255.0, x_val / 255.0
-print('\n')
-print(x_train.shape)
-print(y_train.shape)
-print(x_val.shape)
-print(y_val.shape)
+print('\n', x_train.shape, y_train.shape, x_val.shape, y_val.shape)
 
 
 ''' Build the model '''
 model = RDN(num_G=num_G, channels=channels, scale=scale)
 model.compile(optimizer=Adam(lr=lr, beta_1=0.9, beta_2=0.999, epsilon=1e-8), loss=L1_loss)
+model.build((None, size, size, channels))
 
 
 ''' Train the model and save it'''
 callback_list = [ReduceLROnPlateau(monitor='val_loss', factor=0.707, patience=2, verbose=1)]
 model.fit(x_train, y_train, batch_size=16, epochs=100, validation_data=(x_val, y_val), callbacks=callback_list)
-model.save(model_save_path)
+model.save_weights(model_save_path)

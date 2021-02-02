@@ -4,6 +4,7 @@ import tensorflow as tf
 from matplotlib import pyplot as plt
 from tensorflow.keras.models import load_model
 from data_processing import get_test_data, imgappend, getYimg, psnr
+from model import RDN, L1_loss
 
 
 ''' Set parameters '''
@@ -17,15 +18,15 @@ if Imgflag == 0:
     channels = 3
 else:
     channels = 1
-model_save_path = '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/models/RDN.h5'
+model_save_path = '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/models/RDN.hdf5'
 test_file = '/content/drive/MyDrive/Colaboratory/跨平台超分辨率/SR_train&test/SR_testing_datasets/Set5/butterfly.png'
 Imglist = ['RGB', 'GRAY', 'YCrCb']
 print('Have got parameters, for ' + Imglist[Imgflag] + ' images.')
 
 
 '''Get test data '''
-HR_test, HR_img, HR_res = get_test_data(test_file, size, scale, Rflag=0, Imgflag=Imgflag, sizeflag=0)
-LR_test, LR_img, LR_res = get_test_data(test_file, size, scale, Rflag=1, Imgflag=Imgflag, sizeflag=0)
+HR_test, HR_img, HR_res = get_test_data(test_file, size, scale, Rflag=0, Imgflag=Imgflag)
+LR_test, LR_img, LR_res = get_test_data(test_file, size, scale, Rflag=1, Imgflag=Imgflag)
 x_test, y_test = LR_test / 255.0, HR_test / 255.0
 if Imgflag != 0:  # Have to add another dimension for channel if images only have one channel
     x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], x_test.shape[2], 1))
@@ -36,8 +37,10 @@ if Imgflag == 2:  # Get Cr and Cb channels for Y_CrCb form
 print(y_test.shape, x_test.shape)
 
 
-''' Evaluate test image '''
-model = load_model(model_save_path)
+''' Load model and evaluate test image '''
+model = RDN(num_G=num_G, channels=channels, scale=scale)
+model.build((None, size, size, channels))
+model.load_weights(model_save_path)
 model.evaluate(x_test, y_test, batch_size=16)
 
 
