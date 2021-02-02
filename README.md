@@ -71,4 +71,4 @@ I believe this problem can be sloved with big dataset like DIV2K dataset. I woul
 What's more, it is obviously that the model trained by Y channel of Y_CrCb space is more robust. Plus, considering it has less variables to train, RDN could perform better with Y channel instead of RGB images.
 ## Thanks to:
 https://github.com/atriumlts/subpixel. Atriumlts realized subpixel layer by Keras.  
-https://github.com/rajatkb/RDNSR-Residual-Dense-Network-for-Super-Resolution-Keras. Rajatkb refined Atriumlts' subpixel layer, made it work. I noticed Rajatkb's RDN has some differences between the paper proposed, but its results are still great.
+https://github.com/rajatkb/RDNSR-Residual-Dense-Network-for-Super-Resolution-Keras. Rajatkb refined Atriumlts' subpixel layer, made it work. I noticed Rajatkb's RDN has some differences between the paper proposed, but its results are still great. It inspired me to made some minor changes while building the model.
